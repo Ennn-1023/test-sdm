@@ -21,7 +21,7 @@ class ConcatDatasetWithIndex(ConcatDataset):
 
 
 class ImagePaths(Dataset):
-    def __init__(self, paths, size=None, random_crop=False, labels=None):
+    def __init__(self, paths, size=256, random_crop=False, labels=None):
         self.size = size
         self.random_crop = random_crop
 
@@ -30,12 +30,13 @@ class ImagePaths(Dataset):
         self._length = len(paths)
 
         if self.size is not None and self.size > 0:
-            self.rescaler = albumentations.SmallestMaxSize(max_size = self.size)
+            self.rescaler = albumentations.SmallestMaxSize(max_size=self.size)
+            self.resizer = albumentations.Resize(height=self.size, width=self.size)
             if not self.random_crop:
-                self.cropper = albumentations.CenterCrop(height=self.size,width=self.size)
+                self.cropper = albumentations.CenterCrop(height=self.size, width=self.size)
             else:
-                self.cropper = albumentations.RandomCrop(height=self.size,width=self.size)
-            self.preprocessor = albumentations.Compose([self.rescaler, self.cropper])
+                self.cropper = albumentations.RandomCrop(height=self.size, width=self.size)
+            self.preprocessor = albumentations.Compose([self.rescaler, self.cropper, self.resizer])
         else:
             self.preprocessor = lambda **kwargs: kwargs
 
@@ -43,12 +44,19 @@ class ImagePaths(Dataset):
         return self._length
 
     def preprocess_image(self, image_path):
+        # Open image
         image = Image.open(image_path)
         if not image.mode == "RGB":
             image = image.convert("RGB")
+        
+        # Convert to NumPy array
         image = np.array(image).astype(np.uint8)
+        
+        # Apply preprocessing: rescale, crop, and resize to fixed size
         image = self.preprocessor(image=image)["image"]
-        image = (image/127.5 - 1.0).astype(np.float32)
+        
+        # Normalize to [-1, 1]
+        image = (image / 127.5 - 1.0).astype(np.float32)
         return image
 
     def __getitem__(self, i):
@@ -57,7 +65,6 @@ class ImagePaths(Dataset):
         for k in self.labels:
             example[k] = self.labels[k][i]
         return example
-
 
 class NumpyPaths(ImagePaths):
     def preprocess_image(self, image_path):
