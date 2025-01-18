@@ -22,6 +22,7 @@ class CustomDataset(utils.data.Dataset):
     def __getitem__(self, index):
         image = self.data[index]
         image = Image.open(image)
+
         if not image.mode == "RGB":
             image = image.convert("RGB")
         image.resize(size=(512, 512))
