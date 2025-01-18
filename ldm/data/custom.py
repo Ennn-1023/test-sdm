@@ -21,13 +21,13 @@ class CustomDataset(utils.data.Dataset):
 
     def __getitem__(self, index):
         image = self.data[index]
-        image = Image.open(image)
+        image = Image.open(image).resize((512, 512))
 
         if not image.mode == "RGB":
             image = image.convert("RGB")
         
-        if self.transform:
-            image = self.transform(image)
+        image = np.array(image).astype(np.uint8)
+        image = (image/127.5 - 1.0).astype(np.float32) 
         example = {}
         example['image'] = image
         return example
