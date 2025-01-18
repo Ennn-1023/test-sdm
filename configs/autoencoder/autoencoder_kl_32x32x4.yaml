@@ -30,9 +30,10 @@ data:
     wrap: True
     num_workers: 1
     train:
-      target: ldm.data.custom.CustomDataset
+      target: ldm.data.custom.CustomTrain
       params:
-        root_dir: ./data/dataset
+        data_dir: ./data/dataset
+        size: 512
     # validation:
     #   target: ldm.data.imagenet.ImageNetSRValidation
     #   params:
