@@ -30,6 +30,7 @@ class CustomTrain(CustomBase):
     def __init__(self, size, data_dir):
         super().__init__()
         paths = os.listdir(data_dir)
+        paths = [os.path.join(data_dir, fname) for fname in paths]
         # with open(image_list, "r") as f:
         #     paths = f.read().splitlines()
         self.data = ImagePaths(paths=paths, size=size, random_crop=False)
