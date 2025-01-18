@@ -167,7 +167,7 @@ class ImageNetTrain(ImageNetBase):
             if not os.path.exists(datadir):
                 path = os.path.join(self.root, self.FILES[0])
                 if not os.path.exists(path) or not os.path.getsize(path)==self.SIZES[0]:
-                    download(self.URL + self.FILES[0], self.root)
+                    download(self.URL + self.FILES[0], datadir)
                     # import academictorrents as at
                     # atpath = at.get(self.AT_HASH, datastore=self.root)
                     # assert atpath == path
