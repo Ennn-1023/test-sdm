@@ -25,8 +25,6 @@ class CustomDataset(utils.data.Dataset):
 
         if not image.mode == "RGB":
             image = image.convert("RGB")
-        image.resize(size=(512, 512))
-        image = np.array(image).astype(np.uint8)
         
         if self.transform:
             image = self.transform(image)
