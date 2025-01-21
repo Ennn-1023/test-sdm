@@ -103,6 +103,7 @@ if __name__ == "__main__":
                 cond = torch.cat((c, mask_cond), dim=1)
                 print(c.shape)
                 shape = (cond.shape[1]-1,)+cond.shape[2:]
+                cond = torch.cat((c, cond), dim=1)
                 samples_ddim, _ = sampler.sample(S=opt.steps,
                                                  conditioning=cond,
                                                  batch_size=c.shape[0],
