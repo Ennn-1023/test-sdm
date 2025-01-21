@@ -35,6 +35,13 @@ def make_batch(image, mask, device):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
+        "-c",
+        "--config",
+        type=str,
+        default="configs/stable-diffusion/v1-inference.yaml",
+        help="path to config",
+    )
+    parser.add_argument(
         "-w",
         "--weights",
         type=str,
