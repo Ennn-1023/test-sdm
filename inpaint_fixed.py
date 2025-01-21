@@ -96,7 +96,7 @@ if __name__ == "__main__":
                 batch = make_batch(image, mask, device=device)
 
                 # encode masked image and concat downsampled mask
-                c = model.cond_stage_model.encode(batch["masked_image"])
+                c = model.first_stage_model.encode(batch["masked_image"])
                 cc = torch.nn.functional.interpolate(batch["mask"],
                                                      size=c.shape[-2:])
                 c = torch.cat((c, cc), dim=1)
