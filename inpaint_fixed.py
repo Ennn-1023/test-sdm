@@ -15,6 +15,7 @@ def make_batch(image, mask, device):
     image = image.astype(np.float32)/255.0
     image = image[None].transpose(0,3,1,2)
     image = torch.from_numpy(image)
+    image = image.resize((512, 512))
 
     mask = np.array(Image.open(mask).convert("L"))
     mask = mask.astype(np.float32)/255.0
