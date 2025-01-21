@@ -92,6 +92,8 @@ if __name__ == "__main__":
     with torch.no_grad():
         with model.ema_scope():
             for image, mask in tqdm(zip(images, masks)):
+                prng = np.random.RandomState(23)
+                start_code = prng.randn(1, 4, 512 // 8, 512 // 8)
                 outpath = os.path.join(opt.outdir, os.path.split(image)[1])
                 batch = make_batch(image, mask, device=device)
 
@@ -103,14 +105,15 @@ if __name__ == "__main__":
                 cond = torch.cat((c, mask_cond), dim=1)
                 print(c.shape)
                 shape = (cond.shape[1]-1,)+cond.shape[2:]
-                cond = torch.cat((c, cond), dim=1)
+                cond2 = torch.cat((c, cond), dim=1)
                 samples_ddim, _ = sampler.sample(S=opt.steps,
                                                  conditioning=cond,
                                                  batch_size=c.shape[0],
                                                  mask=mask_cond,
                                                  x0=c,
-                                                 shape=shape,
-                                                 verbose=False)
+                                                 shape=cond2.shape[1:],
+                                                 verbose=False,
+                                                 x_T=cond2)
                 x_samples_ddim = model.decode_first_stage(samples_ddim)
 
                 image = torch.clamp((batch["masked_image"]+1.0)/2.0,
