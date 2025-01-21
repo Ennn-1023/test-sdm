@@ -106,6 +106,9 @@ if __name__ == "__main__":
                 print(c.shape)
                 shape = (cond.shape[1]-1,)+cond.shape[2:]
                 cond2 = torch.cat((c, cond), dim=1)
+                # unconditional conditioning
+                uc_cross = model.get_unconditional_conditioning(c.shape[0], "")
+                uc_full = {"c_concat": [cond], "c_crossattn": [uc_cross]}
                 samples_ddim, _ = sampler.sample(S=opt.steps,
                                                  conditioning=cond,
                                                  batch_size=c.shape[0],
@@ -113,7 +116,8 @@ if __name__ == "__main__":
                                                  x0=c,
                                                  shape= c.shape[1:],
                                                  verbose=False,
-                                                 x_T=c)
+                                                 x_T=c,
+                                                 unconditional_conditioning={"c_concat": cond2})
                 x_samples_ddim = model.decode_first_stage(samples_ddim)
 
                 image = torch.clamp((batch["masked_image"]+1.0)/2.0,
