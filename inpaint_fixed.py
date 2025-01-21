@@ -111,7 +111,7 @@ if __name__ == "__main__":
                                                  batch_size=c.shape[0],
                                                  mask=mask_cond,
                                                  x0=c,
-                                                 shape=cond2.shape[1:],
+                                                 shape= c.shape[1:],
                                                  verbose=False,
                                                  x_T=cond2)
                 x_samples_ddim = model.decode_first_stage(samples_ddim)
