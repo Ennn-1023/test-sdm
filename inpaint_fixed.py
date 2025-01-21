@@ -96,12 +96,13 @@ if __name__ == "__main__":
                 batch = make_batch(image, mask, device=device)
 
                 # encode masked image and concat downsampled mask
-                c = model.first_stage_model.encode(batch["masked_image"])
+                c = model.get_first_stage_encoding(model.encode_first_stage(batch["masked_image"]))
+
                 cc = torch.nn.functional.interpolate(batch["mask"],
-                                                     size=(64, 64))
+                                                     size=c.shape[-2:])
                 c = torch.cat((c, cc), dim=1)
 
-                shape = (9, 64, 64)
+                shape = (c.shape[1]-1,)+c.shape[2:]
                 samples_ddim, _ = sampler.sample(S=opt.steps,
                                                  conditioning=c,
                                                  batch_size=c.shape[0],
