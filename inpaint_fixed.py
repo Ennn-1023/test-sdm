@@ -79,7 +79,7 @@ if __name__ == "__main__":
     print(masks)
     print(f"Found {len(masks)} inputs.")
 
-    config = OmegaConf.load("models/ldm/inpainting_big/config.yaml")
+    config = OmegaConf.load(opt.config)
     model = instantiate_from_config(config.model)
     model.load_state_dict(torch.load(opt.weights)["state_dict"],
                           strict=False)
