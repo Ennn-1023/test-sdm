@@ -712,7 +712,6 @@ if __name__ == "__main__":
 
         signal.signal(signal.SIGUSR1, melk)
         signal.signal(signal.SIGUSR2, divein)
-
         # run
         if opt.train:
             try:

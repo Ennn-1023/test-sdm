@@ -23,7 +23,7 @@ model:
       attn_resolutions: [ ]
       dropout: 0.0
 
-data:
+data: 
   target: main.DataModuleFromConfig
   params:
     batch_size: 4
