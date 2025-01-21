@@ -98,14 +98,16 @@ if __name__ == "__main__":
                 # encode masked image and concat downsampled mask
                 c = model.get_first_stage_encoding(model.encode_first_stage(batch["masked_image"]))
 
-                cc = torch.nn.functional.interpolate(batch["mask"],
+                mask_cond = torch.nn.functional.interpolate(batch["mask"],
                                                      size=c.shape[-2:])
-                c = torch.cat((c, cc), dim=1)
-
-                shape = (c.shape[1]-1,)+c.shape[2:]
+                cond = torch.cat((c, mask_cond), dim=1)
+                print(c.shape)
+                shape = (cond.shape[1]-1,)+cond.shape[2:]
                 samples_ddim, _ = sampler.sample(S=opt.steps,
-                                                 conditioning=c,
+                                                 conditioning=cond,
                                                  batch_size=c.shape[0],
+                                                 mask=mask_cond,
+                                                 x0=c,
                                                  shape=shape,
                                                  verbose=False)
                 x_samples_ddim = model.decode_first_stage(samples_ddim)
