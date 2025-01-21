@@ -113,7 +113,7 @@ if __name__ == "__main__":
                                                  x0=c,
                                                  shape= c.shape[1:],
                                                  verbose=False,
-                                                 x_T=cond2)
+                                                 x_T=c)
                 x_samples_ddim = model.decode_first_stage(samples_ddim)
 
                 image = torch.clamp((batch["masked_image"]+1.0)/2.0,
